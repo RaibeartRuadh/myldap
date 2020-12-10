@@ -1,0 +1,42 @@
+---
+- name: IPA client
+  hosts: ipaclient
+  become: yes
+  gather_facts: true
+
+  vars:
+
+    ipa_domain: raibeart.loc
+    ipa_realm: RAIBEART.LOC
+    ipa_admin: admin
+    ipa_admin_pass: ZZ12zz34
+    ipa_server: ipaserver.raibeart.loc
+
+  tasks:
+
+   - name: Установка epel
+     yum:
+      name: epel-release
+      state: present
+     tags:
+      - epel-package
+      - packages
+  
+   - name: Установка IPA client
+     yum:
+       name: ipa-client
+       state: present
+     tags:
+      - install_ipa-client
+    
+   - name: Конфигурация IPA client
+     shell: ipa-client-install -U
+      --domain {{ ipa_domain }}
+      --principal {{ ipa_admin }}@{{ ipa_realm }}
+      --password {{ ipa_admin_pass }}
+      --server {{ ipa_server }}
+      --realm {{ ipa_realm }}
+      --force-join
+      --mkhomedir
+     tags:
+       - configure_ipa-client

@@ -1,0 +1,51 @@
+---
+- name: IPA server
+  hosts: ipaserver
+  become: yes
+  gather_facts: true
+
+  vars:
+
+    ipa_domain: raibeart.loc
+    ipa_realm: RAIBEART.LOC
+    ipa_admin: admin
+    ipa_admin_pass: ZZ12zz34
+    ipa_server: ipaserver.raibeart.loc
+
+  tasks:
+
+   - name: Установка epel
+     yum:
+      name: epel-release
+      state: present
+     tags:
+      - epel-package
+      - packages
+
+   - name: Установка FreeIPA server
+     yum:
+       name: ipa-server
+       state: present
+     tags:
+      - install_ipa-server
+    
+   - name: Конфигурирование FreeIPA server
+     shell: ipa-server-install -U
+      --hostname={{ ipa_server }}
+      --domain={{ ipa_domain }}
+      --realm={{ ipa_realm }}
+      --ds-password={{ ipa_admin_pass }}
+      --admin-password={{ ipa_admin_pass }}
+     notify:
+      - restart ipa services
+     tags:
+      - configure_ipa-server
+
+  handlers:
+    
+   - name: restart ipa services
+     systemd:
+       name: ipa
+       state: restarted
+       enabled: yes
+       
