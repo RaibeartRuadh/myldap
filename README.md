@@ -21,8 +21,15 @@
 
             ipaserver.raibeart.loc
 
-[Картинка]ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
+[Картинка]
 
-Ввести в поля авторизации логин и пароль: admin ZZZZZZZZZZZZZZZZZZZZZZZZZZ
+Ввести в поля авторизации логин и пароль: 
 
-# МатериалыZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
+           admin
+           ZZ12zz34
+
+Мы успешно авторизовались:
+
+[Картинка]
+
+# Материалы
