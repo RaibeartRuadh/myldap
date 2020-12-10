@@ -41,6 +41,31 @@
      tags:
       - configure_ipa-server
 
+   - name: разрешаем порт TCP
+     firewalld:
+       port: 53/tcp
+       permanent: true
+       state: enabled
+
+   - name: разрешаем порт UDP
+     firewalld:
+       port: 53/udp
+       permanent: true
+       state: enabled
+
+   - name: Разрешаем сервисы Firewalld
+     firewalld: service={{ item }} permanent=true state=enabled
+     with_items:
+       - http
+       - https
+       - ldaps
+       - ntp
+       - ldap
+       - kerberos
+       - kpasswd
+       - dns
+     notify: reload firewalld
+     
   handlers:
     
    - name: restart ipa services
@@ -48,4 +73,12 @@
        name: ipa
        state: restarted
        enabled: yes
+
+   - name: reload firewalld
+     systemd:
+       name: firewalld
+       state: reloaded
+
+
+
        

@@ -76,5 +76,24 @@
        ipa_user: "{{ ipa_admin }}"
        ipa_pass: "{{ ipa_admin_pass }}" 
        
+   - name: Разрешаем Firewalld
+     firewalld: service={{ item }} permanent=true state=enabled
+     with_items:
+       - http
+       - https
+       - ldaps
+       - ntp
+       - ldap
+       - kerberos
+       - kpasswd
+       - dns
+     notify: reload firewalld
+
+  handlers:
+    
+   - name: reload firewalld
+     systemd:
+       name: firewalld
+       state: reloaded
        
  
