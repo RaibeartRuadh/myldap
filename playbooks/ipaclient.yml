@@ -76,7 +76,7 @@
      tags:
        - configure_ipa-client
 
-   - name: create test non-admin user
+   - name: Создадим обычного пользователя
      user:
        name: "{{ username }}"
        password: "{{ userpassword | password_hash('sha512') }}" 
@@ -85,11 +85,11 @@
        create_home: yes
        generate_ssh_key: yes
 
-   - name: read new user keys
+   - name: Считаем полученный публичный ключ
      shell: cat /home/{{ username }}/.ssh/id_rsa.pub
      register: userkey
 
-   - name: add new user to LDAP
+   - name: Добавим пользователя в freeIPA
      ignore_errors: true
      ipa_user:
        name: "{{ username }}"
