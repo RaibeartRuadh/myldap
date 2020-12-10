@@ -11,16 +11,37 @@
     ipa_admin: admin
     ipa_admin_pass: ZZ12zz34
     ipa_server: ipaserver.raibeart.loc
-
+    ntp_timezone: Europe/Moscow
+    
   tasks:
 
-   - name: Установка epel
+   - name: disable selinux
+     selinux: 
+       state: disabled
+
+   - name: Ставим пакеты
      yum:
-      name: epel-release
-      state: present
-     tags:
-      - epel-package
-      - packages
+       name: "{{ packages }}"
+       state: present
+     vars:
+       packages:
+       - ntp
+       - tzdata
+
+   - name: Отключаем chrony
+     systemd:
+       name: chronyd
+       enabled: false
+
+   - name: Ставим временную зону
+     timezone:
+       name: "{{ ntp_timezone }}"
+
+   - name: Включаем ntpd 
+     systemd:
+       name: ntpd
+       state: restarted
+       enabled: true
 
    - name: Установка FreeIPA server
      yum:
@@ -41,18 +62,7 @@
      tags:
       - configure_ipa-server
 
-   - name: разрешаем порт TCP
-     firewalld:
-       port: 53/tcp
-       permanent: true
-       state: enabled
-
-   - name: разрешаем порт UDP
-     firewalld:
-       port: 53/udp
-       permanent: true
-       state: enabled
-
+       
    - name: Разрешаем сервисы Firewalld
      firewalld: service={{ item }} permanent=true state=enabled
      with_items:

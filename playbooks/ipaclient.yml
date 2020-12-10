@@ -16,8 +16,38 @@
     sn: Bond
     tel: 89119000000
     mail: mi6@raibeart.com
-
+    ntp_timezone: Europe/Moscow
+    
+    
   tasks:
+
+   - name: disable selinux
+     selinux: 
+       state: disabled
+
+   - name: Ставим пакеты
+     yum:
+       name: "{{ packages }}"
+       state: present
+     vars:
+       packages:
+       - ntp
+       - tzdata
+
+   - name: Отключаем chrony
+     systemd:
+       name: chronyd
+       enabled: false
+
+   - name: Ставим временную зону
+     timezone:
+       name: "{{ ntp_timezone }}"
+
+   - name: Включаем ntpd 
+     systemd:
+       name: ntpd
+       state: restarted
+       enabled: true
 
    - name: Установка epel
      yum:
