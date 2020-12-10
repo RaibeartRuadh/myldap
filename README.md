@@ -60,6 +60,8 @@
 
            $ su Agent007
 
-Подключиться к серверу по ключу ssh ipaserver.raibeart.loc -v
+Подключиться к серверу по ключу 
+
+           $ ssh ipaserver.raibeart.loc -v
 
 
