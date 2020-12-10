@@ -5,12 +5,17 @@
   gather_facts: true
 
   vars:
-
     ipa_domain: raibeart.loc
     ipa_realm: RAIBEART.LOC
     ipa_admin: admin
     ipa_admin_pass: ZZ12zz34
     ipa_server: ipaserver.raibeart.loc
+    username: Agent007
+    userpassword: testpassword
+    givenname: James
+    sn: Bond
+    tel: 89119000000
+    mail: mi6@raibeart.com
 
   tasks:
 
@@ -40,3 +45,36 @@
       --mkhomedir
      tags:
        - configure_ipa-client
+
+   - name: create test non-admin user
+     user:
+       name: "{{ username }}"
+       password: "{{ userpassword | password_hash('sha512') }}" 
+       state: present
+       update_password: on_create
+       create_home: yes
+       generate_ssh_key: yes
+
+   - name: read new user keys
+     shell: cat /home/{{ username }}/.ssh/id_rsa.pub
+     register: userkey
+
+   - name: add new user to LDAP
+     ignore_errors: true
+     ipa_user:
+       name: "{{ username }}"
+       state: present
+       givenname: "{{ givenname }}"
+       sn: "{{ sn }}"
+       mail:
+       - "{{ mail }}"
+       telephonenumber:
+       - "{{ tel }}"
+       sshpubkey:
+       - "{{ userkey.stdout }}"
+       ipa_host: "{{ ipa_server }}"
+       ipa_user: "{{ ipa_admin }}"
+       ipa_pass: "{{ ipa_admin_pass }}" 
+       
+       
+ 
