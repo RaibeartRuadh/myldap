@@ -25,7 +25,7 @@
      selinux: 
        state: disabled
 
-   - name: Ставим пакеты
+   - name: install packages
      yum:
        name: "{{ packages }}"
        state: present
@@ -34,22 +34,22 @@
        - ntp
        - tzdata
 
-   - name: Отключаем chrony
+   - name: disable chrony
      systemd:
        name: chronyd
        enabled: false
 
-   - name: Ставим временную зону
+   - name: set timezone
      timezone:
        name: "{{ ntp_timezone }}"
 
-   - name: Включаем ntpd 
+   - name: enable ntpd 
      systemd:
        name: ntpd
        state: restarted
        enabled: true
 
-   - name: Установка epel
+   - name: Install epel repo
      yum:
       name: epel-release
       state: present
@@ -57,14 +57,14 @@
       - epel-package
       - packages
   
-   - name: Установка IPA client
+   - name: Install IPA client
      yum:
        name: ipa-client
        state: present
      tags:
       - install_ipa-client
     
-   - name: Конфигурация IPA client
+   - name: Configure IPA client
      shell: ipa-client-install -U
       --domain {{ ipa_domain }}
       --principal {{ ipa_admin }}@{{ ipa_realm }}
@@ -76,7 +76,7 @@
      tags:
        - configure_ipa-client
 
-   - name: Создадим обычного пользователя
+   - name: Create user
      user:
        name: "{{ username }}"
        password: "{{ userpassword | password_hash('sha512') }}" 
@@ -85,11 +85,11 @@
        create_home: yes
        generate_ssh_key: yes
 
-   - name: Считаем полученный публичный ключ
+   - name: Read public key
      shell: cat /home/{{ username }}/.ssh/id_rsa.pub
      register: userkey
 
-   - name: Добавим пользователя в freeIPA
+   - name: Add user to freeIPA
      ignore_errors: true
      ipa_user:
        name: "{{ username }}"
@@ -106,7 +106,7 @@
        ipa_user: "{{ ipa_admin }}"
        ipa_pass: "{{ ipa_admin_pass }}" 
        
-   - name: Разрешаем Firewalld
+   - name: Enable Firewalld
      firewalld: service={{ item }} permanent=true state=enabled
      with_items:
        - http

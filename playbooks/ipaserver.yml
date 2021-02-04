@@ -19,7 +19,7 @@
      selinux: 
        state: disabled
 
-   - name: Ставим пакеты
+   - name: install packages
      yum:
        name: "{{ packages }}"
        state: present
@@ -28,29 +28,29 @@
        - ntp
        - tzdata
 
-   - name: Отключаем chrony
+   - name: Disable chrony
      systemd:
        name: chronyd
        enabled: false
 
-   - name: Ставим временную зону
+   - name: Set timezone
      timezone:
        name: "{{ ntp_timezone }}"
 
-   - name: Включаем ntpd 
+   - name: Enable ntpd 
      systemd:
        name: ntpd
        state: restarted
        enabled: true
 
-   - name: Установка FreeIPA server
+   - name: Install FreeIPA server
      yum:
        name: ipa-server
        state: present
      tags:
       - install_ipa-server
     
-   - name: Конфигурирование FreeIPA server
+   - name: Create config FreeIPA server
      shell: ipa-server-install -U
       --hostname={{ ipa_server }}
       --domain={{ ipa_domain }}
@@ -63,7 +63,7 @@
       - configure_ipa-server
 
        
-   - name: Разрешаем сервисы Firewalld
+   - name: Enable Firewalld
      firewalld: service={{ item }} permanent=true state=enabled
      with_items:
        - http
