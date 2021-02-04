@@ -33,7 +33,7 @@
 
             ipaserver.raibeart.loc
 
-![alt text](pic1.png "")
+![alt text](screenshots/pic1.png "")
 
 Ввести в поля авторизации логин и пароль: 
 
@@ -41,10 +41,10 @@
            ZZ12zz34
 
 Мы успешно авторизовались:
-![alt text](pic2.png "")
+![alt text](screenshots/pic2.png "")
 
 Также мы видим, что наш клиентский сценарий отработал и у нас появилась еще одна запись
-![alt text](pic3.png "")
+![alt text](screenshots/pic3.png "")
 
 
 Проверка, что авторизация клиента идет по ключу:
