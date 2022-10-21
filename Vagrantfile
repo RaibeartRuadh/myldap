@@ -12,7 +12,7 @@ Vagrant.configure(2) do |config|
     config.vm.define "ipaserver" do |box| #ipa-srv
         
         box.vm.hostname = "ipaserver"
-        box.vm.network :private_network, ip: "192.168.200.10"
+        box.vm.network :private_network, ip: "192.168.56.10"
         box.vm.provision "shell", path: "config/server.sh" 
         box.vm.provision "ansible" do |ansible|
             ansible.playbook = "playbooks/ipaserver.yml"
@@ -21,7 +21,7 @@ Vagrant.configure(2) do |config|
 
     config.vm.define "ipaclient" do |box|
         box.vm.hostname = "ipaclient"
-        box.vm.network :private_network, ip: "192.168.200.20"
+        box.vm.network :private_network, ip: "192.168.56.20"
         box.vm.provision "shell", path: "config/client.sh"
         box.vm.provision "ansible" do |ansible|
             ansible.playbook = "playbooks/ipaclient.yml"
